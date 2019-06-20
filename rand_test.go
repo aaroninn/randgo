@@ -15,7 +15,7 @@ func Test_encrypt(t *testing.T) {
 			e := Rand()
 			_, ok := generated[e]
 			log.Println(e)
-			// So(e, ShouldBeGreaterThan, 0)
+			So(e, ShouldBeGreaterThan, 0)
 			So(ok, ShouldBeFalse)
 			generated[e] = true
 		}
