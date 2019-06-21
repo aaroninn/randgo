@@ -1,5 +1,7 @@
 package randgo
 
+import "math"
+
 const (
 	rngLen   = 607
 	rngTap   = 273
@@ -14,13 +16,38 @@ type rngSource struct {
 	vec  [rngLen]int64 // current feedback register
 }
 
-var globalRng = New(1)
+var globalRng = newSource(1)
 
 func Rand() int {
 	return int(globalRng.Int63())
 }
 
-func New(v int) *rngSource {
+func RandN(n int) int {
+	var max, min int
+
+	if n <= 0 {
+		n = 1
+	}
+	if n >= 20 {
+		n = 20
+		max = rngMask
+	} else {
+		max = int(math.Pow10(n)) - 1
+	}
+	min = int(math.Pow10(n - 1))
+
+	r := Rand()
+	if r > max {
+		r = r % max
+	}
+	if r < min {
+		r += min
+	}
+
+	return r
+}
+
+func newSource(v int) *rngSource {
 	rng := new(rngSource)
 	rng.Seed(int64(v))
 
